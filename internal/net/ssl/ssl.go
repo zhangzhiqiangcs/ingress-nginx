@@ -468,6 +468,22 @@ func fullChainCert(in []byte) ([]byte, error) {
 	return certUtil.EncodeCertificates(certs), nil
 }
 
+// HostnameMatch checks if a hostname is valid in a certificate
+func HostnameMatch(hostname string, cert *ingress.SSLCert) bool {
+	if IsValidHostname(hostname, cert.CN) {
+		return true
+	}
+	if IsValidHostname(hostname, cert.Certificate.DNSNames) {
+		return true
+	}
+	for _, ip := range cert.Certificate.IPAddresses {
+		if ip.String() == hostname {
+			return true
+		}
+	}
+	return false
+}
+
 // IsValidHostname checks if a hostname is valid in a list of common names
 func IsValidHostname(hostname string, commonNames []string) bool {
 	for _, cn := range commonNames {

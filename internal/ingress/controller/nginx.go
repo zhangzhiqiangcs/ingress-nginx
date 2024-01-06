@@ -971,7 +971,7 @@ func configureCertificates(rawServers []*ingress.Server) error {
 		configure(rawServer.Hostname, rawServer.SSLCert)
 
 		for _, alias := range rawServer.Aliases {
-			if rawServer.SSLCert != nil && ssl.IsValidHostname(alias, rawServer.SSLCert.CN) {
+			if rawServer.SSLCert != nil && ssl.HostnameMatch(alias, rawServer.SSLCert) {
 				configuration.Servers[alias] = rawServer.SSLCert.UID
 			} else {
 				configuration.Servers[alias] = emptyUID
